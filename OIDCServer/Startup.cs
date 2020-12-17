@@ -18,9 +18,7 @@ namespace OIDCServer
                 .AddDeveloperSigningCredential()
                 .AddInMemoryClients(OIDCConfig.Clients)
                 .AddInMemoryApiResources(OIDCConfig.ApiResource)
-                .AddInMemoryApiScopes(OIDCConfig.ApiScopes)
-                .AddInMemoryIdentityResources(OIDCConfig.IdentityResources)
-                .AddTestUsers(OIDCConfig.Users);
+                .AddInMemoryApiScopes(OIDCConfig.ApiScopes);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

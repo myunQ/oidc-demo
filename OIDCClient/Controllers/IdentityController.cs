@@ -15,7 +15,7 @@ namespace OIDCClient.Controllers
     public class IdentityController : ControllerBase
     {
         [HttpGet]
-        public async Task<IActionResult> Get(string uname, string passwd)
+        public async Task<IActionResult> Get()
         {
             HttpClient client = new HttpClient();
 
@@ -35,14 +35,12 @@ namespace OIDCClient.Controllers
                 return StatusCode(501, disco.Error);
             }
 
-            var tokenResponse = await client.RequestPasswordTokenAsync(new PasswordTokenRequest
+            var tokenResponse = await client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
             {
                 Address = disco.TokenEndpoint,
 
-                ClientId = "password client",
-                ClientSecret = "123",
-                UserName = uname,
-                Password = passwd
+                ClientId = "client credentials client",
+                ClientSecret = "123"
             });
 
             if (tokenResponse.IsError)
