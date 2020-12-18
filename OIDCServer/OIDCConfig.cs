@@ -54,16 +54,21 @@ namespace OIDCServer
 
                 yield return new Client
                 {
-                    ClientId = "password client",
-                    ClientName = "用户密码验证模式的客户端",
+                    ClientId = "implicit client",
+                    ClientName = "简化授权模式的客户端",
                     ClientSecrets = { new Secret(clientSecret) },
 
-                    // 是否需要进入用户显示同意授权页。在 ResourceOwnerPassword 授权模式下用不着。
-                    //RequireConsent = true,
+                    // 是否需要进入用户显示同意授权页。
+                    RequireConsent = true,
+                    // 登录成功回调处理地址，处理回调返回的数据
+                    RedirectUris = { "http://client.test:5200/oauth/signin-oidc" },
+                    // where to redirect to after logout
+                    PostLogoutRedirectUris = { "http://client.test:5200/oauth/signout-callback-oidc" },
+
                     // 允许此客户端使用的授权的模式。
-                    AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
-                    // 
-                    AllowOfflineAccess = true,
+                    AllowedGrantTypes = GrantTypes.Implicit,
+                    // 协议中规定 implicit 授权模式不提供 refresh token。
+                    //AllowOfflineAccess = true,
                     // 
                     AllowedScopes = 
                     {
@@ -71,8 +76,8 @@ namespace OIDCServer
                         IdentityServerConstants.StandardScopes.Profile,
                         "scope-1"
                     },
-                    // 是否允许浏览器传入 access token。默认值 false。在 ResourceOwnerPassword 授权模式下用不着。
-                    //AllowAccessTokensViaBrowser = true,
+                    // 是否允许浏览器接收 access token。默认值 false。在 Implicit 授权模式下必须设置为 true。
+                    AllowAccessTokensViaBrowser = true,
                     // 在 ResourceOwnerPassword 授权模式下用不着。
                     //AlwaysIncludeUserClaimsInIdToken = true
                 };

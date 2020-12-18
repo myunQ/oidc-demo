@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,6 +11,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+
+
 
 namespace OIDCClient
 {
@@ -25,6 +28,36 @@ namespace OIDCClient
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // 不知道下面两条语句是否能达到类似的效果。
+            //System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
+            //System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = "Cookies";
+                options.DefaultChallengeScheme = "oidc";
+            })
+            .AddCookie("Cookies")
+            .AddOpenIdConnect("oidc", options =>
+            {
+                options.Authority = "http://oidc.test:5000";
+                options.RequireHttpsMetadata = false;
+                options.ResponseType = "token id_token";
+                //options.ResponseMode
+                options.ClientId = "implicit client";
+                options.SaveTokens = true;
+                options.Scope.Add("scope-1");
+                // 协议中规定 implicit 授权模式不提供 refresh token。
+                //options.Scope.Add("offline_access");
+                //options.GetClaimsFromUserInfoEndpoint = true;
+                options.CallbackPath = "/oauth/signin-oidc";
+                options.SignedOutCallbackPath = "/oauth/signout-callback-oidc";
+                //options.ClaimActions.MapUniqueJsonKey("myclaim1", "myclaim1");
+
+                // 在 http 协议下 chrome 浏览器会将 SameSite = none 的 Cookie 丢弃。所以这里必须设置为 Lax 或 Strict
+                options.NonceCookie.SameSite = SameSiteMode.Lax;
+                options.CorrelationCookie.SameSite = SameSiteMode.Lax;
+            });
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -45,6 +78,7 @@ namespace OIDCClient
 
             app.UseRouting();
 
+            app.UseAuthorization();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

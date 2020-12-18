@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,49 +11,18 @@ using IdentityModel.Client;
 
 namespace OIDCClient.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class IdentityController : ControllerBase
     {
+        public static string AccessToken { get; set; }
+
         [HttpGet]
-        public async Task<IActionResult> Get(string uname, string passwd)
+        public async Task<IActionResult> Get()
         {
             HttpClient client = new HttpClient();
-
-            //var disco = await client.GetDiscoveryDocumentAsync("https://oidc.test:5000");
-
-            var disco = await client.GetDiscoveryDocumentAsync(new DiscoveryDocumentRequest
-            {
-                Address = "http://oidc.test:5000",
-                Policy = new DiscoveryPolicy
-                {
-                    RequireHttps = false
-                }
-            });
-
-            if (disco.IsError)
-            {
-                return StatusCode(501, disco.Error);
-            }
-
-            var tokenResponse = await client.RequestPasswordTokenAsync(new PasswordTokenRequest
-            {
-                Address = disco.TokenEndpoint,
-
-                ClientId = "password client",
-                ClientSecret = "123",
-                UserName = uname,
-                Password = passwd
-            });
-
-            if (tokenResponse.IsError)
-            {
-                return StatusCode(501, tokenResponse.Error);
-            }
-
-            Console.WriteLine(tokenResponse.Json);
-
-            client.SetBearerToken(tokenResponse.AccessToken);
+            client.SetBearerToken(AccessToken);
 
             var response = await client.GetAsync("http://api.test:5100/api/identity");
             if (!response.IsSuccessStatusCode)
