@@ -17,9 +17,9 @@ namespace OIDCProtectedResources
             services.AddAuthentication("wode")
                 .AddJwtBearer("wode", options =>
                 {
-                    options.Authority = "http://oidc.test:5000";
+                    options.Authority = "https://server.oidc.test:5000";
                     options.Audience = "api 1";
-                    options.RequireHttpsMetadata = false;
+                    //options.RequireHttpsMetadata = false;
                 });
 
             services.AddControllers();

@@ -61,9 +61,19 @@ namespace OIDCServer
                     // 是否需要进入用户显示同意授权页。
                     RequireConsent = true,
                     // 登录成功回调处理地址，处理回调返回的数据
-                    RedirectUris = { "http://client.test:5200/oauth/signin-oidc" },
+                    RedirectUris = 
+                    {
+                        // 这些请求由 Microsoft.AspNetCore.Authentication.OpenIdConnect 组件负责处理。
+                        //"https://client.oidc.test:5200/signin-oidc" //默认路径
+                        "https://client.oidc.test:5200/oidc/signin-oidc"
+                    },
                     // where to redirect to after logout
-                    PostLogoutRedirectUris = { "http://client.test:5200/oauth/signout-callback-oidc" },
+                    PostLogoutRedirectUris = 
+                    {
+                        // 这些请求由 Microsoft.AspNetCore.Authentication.OpenIdConnect 组件负责处理。
+                        //"https://client.oidc.test:5200/signout-callback-oidc"  //默认路径
+                        "https://client.oidc.test:5200/oidc/signout-callback-oidc"
+                    },
 
                     // 允许此客户端使用的授权的模式。
                     AllowedGrantTypes = GrantTypes.Implicit,

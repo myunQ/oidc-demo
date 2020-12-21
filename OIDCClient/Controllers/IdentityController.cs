@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Collections.Generic;
@@ -16,15 +17,17 @@ namespace OIDCClient.Controllers
     [ApiController]
     public class IdentityController : ControllerBase
     {
-        public static string AccessToken { get; set; }
-
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            HttpClient client = new HttpClient();
-            client.SetBearerToken(AccessToken);
+            string accessToken = await HttpContext.GetTokenAsync(IdentityModel.OidcConstants.TokenTypes.AccessToken);
+            string idToken = await HttpContext.GetTokenAsync(IdentityModel.OidcConstants.TokenTypes.IdentityToken);
+            string refreshToken = await HttpContext.GetTokenAsync(IdentityModel.OidcConstants.TokenTypes.RefreshToken);
 
-            var response = await client.GetAsync("http://api.test:5100/api/identity");
+            HttpClient client = new HttpClient();
+            client.SetBearerToken(accessToken);
+
+            var response = await client.GetAsync("https://api.oidc.test:5100/api/identity");
             if (!response.IsSuccessStatusCode)
             {
                 return StatusCode((int)response.StatusCode);

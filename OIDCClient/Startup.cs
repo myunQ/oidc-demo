@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -34,29 +36,32 @@ namespace OIDCClient
 
             services.AddAuthentication(options =>
             {
-                options.DefaultScheme = "Cookies";
-                options.DefaultChallengeScheme = "oidc";
+                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
             })
-            .AddCookie("Cookies")
-            .AddOpenIdConnect("oidc", options =>
+            .AddCookie()
+            .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
             {
-                options.Authority = "http://oidc.test:5000";
-                options.RequireHttpsMetadata = false;
+                options.Authority = "https://server.oidc.test:5000";
+                //options.RequireHttpsMetadata = false;
                 options.ResponseType = "token id_token";
-                //options.ResponseMode
+                //options.ResponseMode = "fragment";
                 options.ClientId = "implicit client";
                 options.SaveTokens = true;
                 options.Scope.Add("scope-1");
                 // 协议中规定 implicit 授权模式不提供 refresh token。
                 //options.Scope.Add("offline_access");
                 //options.GetClaimsFromUserInfoEndpoint = true;
-                options.CallbackPath = "/oauth/signin-oidc";
-                options.SignedOutCallbackPath = "/oauth/signout-callback-oidc";
                 //options.ClaimActions.MapUniqueJsonKey("myclaim1", "myclaim1");
 
+                // 这些请求由 Microsoft.AspNetCore.Authentication.OpenIdConnect 组件负责处理。
+                options.CallbackPath = "/oidc/signin-oidc";
+                // 这些请求由 Microsoft.AspNetCore.Authentication.OpenIdConnect 组件负责处理。
+                options.SignedOutCallbackPath = "/oidc/signout-callback-oidc";
+
                 // 在 http 协议下 chrome 浏览器会将 SameSite = none 的 Cookie 丢弃。所以这里必须设置为 Lax 或 Strict
-                options.NonceCookie.SameSite = SameSiteMode.Lax;
-                options.CorrelationCookie.SameSite = SameSiteMode.Lax;
+                //options.NonceCookie.SameSite = SameSiteMode.Lax;
+                //options.CorrelationCookie.SameSite = SameSiteMode.Lax;
             });
 
             services.AddControllers();
@@ -78,7 +83,7 @@ namespace OIDCClient
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
