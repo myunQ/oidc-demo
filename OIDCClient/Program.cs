@@ -20,7 +20,11 @@ namespace OIDCClient
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                    webBuilder.UseStartup<Startup>()
+                    .UseKestrel((context, options) =>
+                    {
+                        options.Configure(context.Configuration.GetSection("Kestrel"));
+                    });
                 });
     }
 }

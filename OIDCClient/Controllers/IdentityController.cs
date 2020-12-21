@@ -19,16 +19,18 @@ namespace OIDCClient.Controllers
         {
             HttpClient client = new HttpClient();
 
-            //var disco = await client.GetDiscoveryDocumentAsync("https://oidc.test:5000");
+            var disco = await client.GetDiscoveryDocumentAsync("https://server.oidc.test:5000");
 
+            /* 用于 http 协议
             var disco = await client.GetDiscoveryDocumentAsync(new DiscoveryDocumentRequest
             {
-                Address = "http://oidc.test:5000",
+                Address = "http://server.oidc.test:5000",
                 Policy = new DiscoveryPolicy
                 {
                     RequireHttps = false
                 }
             });
+            */
 
             if (disco.IsError)
             {
@@ -52,7 +54,7 @@ namespace OIDCClient.Controllers
 
             client.SetBearerToken(tokenResponse.AccessToken);
 
-            var response = await client.GetAsync("http://api.test:5100/api/identity");
+            var response = await client.GetAsync("https://api.oidc.test:5100/api/identity");
             if (!response.IsSuccessStatusCode)
             {
                 return StatusCode((int)response.StatusCode);
