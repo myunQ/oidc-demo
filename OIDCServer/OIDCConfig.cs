@@ -54,21 +54,33 @@ namespace OIDCServer
 
                 yield return new Client
                 {
-                    ClientId = "implicit client",
-                    ClientName = "简化授权模式的客户端",
+                    ClientId = "code client",
+                    ClientName = "授权码授权模式的客户端",
                     ClientSecrets = { new Secret(clientSecret) },
 
+                    RequirePkce = true,
+                    //RequireClientSecret = false,
                     // 是否需要进入用户显示同意授权页。
                     RequireConsent = true,
                     // 登录成功回调处理地址，处理回调返回的数据
-                    RedirectUris = { "http://client.test:5200/oauth/signin-oidc" },
+                    RedirectUris = 
+                    {
+                        // 这些请求由 Microsoft.AspNetCore.Authentication.OpenIdConnect 组件负责处理。
+                        //"https://client.oidc.test:5200/signin-oidc"
+                        "https://client.oidc.test:5200/oidc/signin-oidc"
+                    },
                     // where to redirect to after logout
-                    PostLogoutRedirectUris = { "http://client.test:5200/oauth/signout-callback-oidc" },
+                    PostLogoutRedirectUris = 
+                    {
+                        // 这些请求由 Microsoft.AspNetCore.Authentication.OpenIdConnect 组件负责处理。
+                        //"https://client.oidc.test:5200/signout-callback-oidc"
+                        "https://client.oidc.test:5200/oidc/signout-callback-oidc"
+                    },
 
                     // 允许此客户端使用的授权的模式。
-                    AllowedGrantTypes = GrantTypes.Implicit,
-                    // 协议中规定 implicit 授权模式不提供 refresh token。
-                    //AllowOfflineAccess = true,
+                    AllowedGrantTypes = GrantTypes.Code,
+                    // 需要获取 refresh token。
+                    AllowOfflineAccess = true,
                     // 
                     AllowedScopes = 
                     {
@@ -77,7 +89,7 @@ namespace OIDCServer
                         "scope-1"
                     },
                     // 是否允许浏览器接收 access token。默认值 false。在 Implicit 授权模式下必须设置为 true。
-                    AllowAccessTokensViaBrowser = true,
+                    //AllowAccessTokensViaBrowser = true,
                     // 在 ResourceOwnerPassword 授权模式下用不着。
                     //AlwaysIncludeUserClaimsInIdToken = true
                 };

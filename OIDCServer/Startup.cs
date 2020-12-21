@@ -17,8 +17,8 @@ namespace OIDCServer
             services.AddIdentityServer(options =>
             {
                 // 在 http 协议下 chrome 浏览器会将 SameSite = none 的 Cookie 丢弃。所以这里必须设置为 Lax 或 Strict
-                options.Authentication.CookieSameSiteMode = SameSiteMode.Lax;
-                options.Authentication.CheckSessionCookieSameSiteMode = SameSiteMode.Lax;
+                //options.Authentication.CookieSameSiteMode = SameSiteMode.Lax;
+                //options.Authentication.CheckSessionCookieSameSiteMode = SameSiteMode.Lax;
             }
                 )
                 .AddDeveloperSigningCredential()
