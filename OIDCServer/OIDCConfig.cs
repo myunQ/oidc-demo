@@ -1,13 +1,5 @@
-﻿using System;
+﻿using IdentityServer4.Models;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Security.Claims;
-
-using IdentityServer4;
-using IdentityServer4.Models;
-using IdentityServer4.Test;
-using IdentityModel;
 
 namespace OIDCServer
 {
@@ -29,7 +21,7 @@ namespace OIDCServer
             {
                 yield return new ApiResource("api 1")
                 {
-                    Scopes = {"scope-1"}
+                    Scopes = { "scope-1" }
                 };
             }
         }
@@ -51,7 +43,7 @@ namespace OIDCServer
                     // 没有用户账户介入，用不着。
                     //AllowOfflineAccess = true,
                     // 
-                    AllowedScopes = 
+                    AllowedScopes =
                     {
                         "scope-1"
                     },
