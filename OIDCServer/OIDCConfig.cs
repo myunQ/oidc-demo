@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Security.Claims;
-
+﻿using IdentityModel;
 using IdentityServer4;
 using IdentityServer4.Models;
 using IdentityServer4.Test;
-using IdentityModel;
+using System;
+using System.Collections.Generic;
+using System.Security.Claims;
 
 namespace OIDCServer
 {
@@ -41,7 +38,7 @@ namespace OIDCServer
             {
                 yield return new ApiResource("api 1")
                 {
-                    Scopes = {"scope-1"}
+                    Scopes = { "scope-1" }
                 };
             }
         }
@@ -61,14 +58,14 @@ namespace OIDCServer
                     // 是否需要进入用户显示同意授权页。
                     RequireConsent = true,
                     // 登录成功回调处理地址，处理回调返回的数据
-                    RedirectUris = 
+                    RedirectUris =
                     {
                         // 这些请求由 Microsoft.AspNetCore.Authentication.OpenIdConnect 组件负责处理。
                         //"https://client.oidc.test:5200/signin-oidc" //默认路径
                         "https://client.oidc.test:5200/oidc/signin-oidc"
                     },
                     // where to redirect to after logout
-                    PostLogoutRedirectUris = 
+                    PostLogoutRedirectUris =
                     {
                         // 这些请求由 Microsoft.AspNetCore.Authentication.OpenIdConnect 组件负责处理。
                         //"https://client.oidc.test:5200/signout-callback-oidc"  //默认路径
@@ -80,7 +77,7 @@ namespace OIDCServer
                     // 协议中规定 implicit 授权模式不提供 refresh token。
                     //AllowOfflineAccess = true,
                     // 
-                    AllowedScopes = 
+                    AllowedScopes =
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,

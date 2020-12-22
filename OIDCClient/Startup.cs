@@ -1,18 +1,11 @@
+ï»¿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 
 
@@ -30,7 +23,7 @@ namespace OIDCClient
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // ²»ÖªµÀÏÂÃæÁ½ÌõÓï¾äÊÇ·ñÄÜ´ïµ½ÀàËÆµÄĞ§¹û¡£
+            // ä¸çŸ¥é“ä¸‹é¢ä¸¤æ¡è¯­å¥æ˜¯å¦èƒ½è¾¾åˆ°ç±»ä¼¼çš„æ•ˆæœã€‚
             //System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
             //System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
@@ -49,17 +42,17 @@ namespace OIDCClient
                 options.ClientId = "implicit client";
                 options.SaveTokens = true;
                 options.Scope.Add("scope-1");
-                // Ğ­ÒéÖĞ¹æ¶¨ implicit ÊÚÈ¨Ä£Ê½²»Ìá¹© refresh token¡£
+                // åè®®ä¸­è§„å®š implicit æˆæƒæ¨¡å¼ä¸æä¾› refresh tokenã€‚
                 //options.Scope.Add("offline_access");
                 //options.GetClaimsFromUserInfoEndpoint = true;
                 //options.ClaimActions.MapUniqueJsonKey("myclaim1", "myclaim1");
 
-                // ÕâĞ©ÇëÇóÓÉ Microsoft.AspNetCore.Authentication.OpenIdConnect ×é¼ş¸ºÔğ´¦Àí¡£
+                // è¿™äº›è¯·æ±‚ç”± Microsoft.AspNetCore.Authentication.OpenIdConnect ç»„ä»¶è´Ÿè´£å¤„ç†ã€‚
                 options.CallbackPath = "/oidc/signin-oidc";
-                // ÕâĞ©ÇëÇóÓÉ Microsoft.AspNetCore.Authentication.OpenIdConnect ×é¼ş¸ºÔğ´¦Àí¡£
+                // è¿™äº›è¯·æ±‚ç”± Microsoft.AspNetCore.Authentication.OpenIdConnect ç»„ä»¶è´Ÿè´£å¤„ç†ã€‚
                 options.SignedOutCallbackPath = "/oidc/signout-callback-oidc";
 
-                // ÔÚ http Ğ­ÒéÏÂ chrome ä¯ÀÀÆ÷»á½« SameSite = none µÄ Cookie ¶ªÆú¡£ËùÒÔÕâÀï±ØĞëÉèÖÃÎª Lax »ò Strict
+                // åœ¨ http åè®®ä¸‹ chrome æµè§ˆå™¨ä¼šå°† SameSite = none çš„ Cookie ä¸¢å¼ƒã€‚æ‰€ä»¥è¿™é‡Œå¿…é¡»è®¾ç½®ä¸º Lax æˆ– Strict
                 //options.NonceCookie.SameSite = SameSiteMode.Lax;
                 //options.CorrelationCookie.SameSite = SameSiteMode.Lax;
             });

@@ -1,14 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using IdentityModel.Client;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using System.Net.Http;
 using System.Threading.Tasks;
-
-using IdentityModel.Client;
 
 namespace OIDCClient.Controllers
 {
@@ -33,7 +29,7 @@ namespace OIDCClient.Controllers
                 return StatusCode((int)response.StatusCode);
             }
             else
-            {   
+            {
                 var content = await response.Content.ReadAsStringAsync();
 
                 return Content(content, "text/json");

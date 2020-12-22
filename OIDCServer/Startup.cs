@@ -1,12 +1,8 @@
-using Microsoft.AspNetCore.Builder;
+ï»¿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace OIDCServer
 {
@@ -16,7 +12,7 @@ namespace OIDCServer
         {
             services.AddIdentityServer(options =>
             {
-                // ÔÚ http Ð­ÒéÏÂ chrome ä¯ÀÀÆ÷»á½« SameSite = none µÄ Cookie ¶ªÆú¡£ËùÒÔÕâÀï±ØÐëÉèÖÃÎª Lax »ò Strict
+                // åœ¨ http åè®®ä¸‹ chrome æµè§ˆå™¨ä¼šå°† SameSite = none çš„ Cookie ä¸¢å¼ƒã€‚æ‰€ä»¥è¿™é‡Œå¿…é¡»è®¾ç½®ä¸º Lax æˆ– Strict
                 //options.Authentication.CookieSameSiteMode = SameSiteMode.Lax;
                 //options.Authentication.CheckSessionCookieSameSiteMode = SameSiteMode.Lax;
             }
@@ -45,7 +41,7 @@ namespace OIDCServer
 
             app.UseIdentityServer();
 
-            // ÓÃ»§Í¬ÒâÊÚÈ¨µÄÒ³ÃæÐèÒªÓÃµ½¡£
+            // ç”¨æˆ·åŒæ„æŽˆæƒçš„é¡µé¢éœ€è¦ç”¨åˆ°ã€‚
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
