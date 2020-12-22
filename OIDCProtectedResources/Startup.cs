@@ -3,10 +3,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace OIDCProtectedResources
 {
@@ -14,6 +10,10 @@ namespace OIDCProtectedResources
     {
         public void ConfigureServices(IServiceCollection services)
         {
+
+            System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
+            //System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
             services.AddAuthentication("wode")
                 .AddJwtBearer("wode", options =>
                 {
@@ -33,7 +33,7 @@ namespace OIDCProtectedResources
             }
 
             app.UseRouting();
-            
+
             app.UseAuthentication();
             app.UseAuthorization();
 
