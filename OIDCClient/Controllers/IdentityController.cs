@@ -1,12 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using IdentityModel.Client;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-
-using IdentityModel.Client;
 
 namespace OIDCClient.Controllers
 {
@@ -62,7 +58,7 @@ namespace OIDCClient.Controllers
                 return StatusCode((int)response.StatusCode);
             }
             else
-            {   
+            {
                 var content = await response.Content.ReadAsStringAsync();
 
                 return Content(content, "text/json");

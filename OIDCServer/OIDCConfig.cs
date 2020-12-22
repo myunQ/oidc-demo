@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Security.Claims;
-
+﻿using IdentityModel;
 using IdentityServer4;
 using IdentityServer4.Models;
 using IdentityServer4.Test;
-using IdentityModel;
+using System;
+using System.Collections.Generic;
+using System.Security.Claims;
 
 namespace OIDCServer
 {
@@ -41,7 +38,7 @@ namespace OIDCServer
             {
                 yield return new ApiResource("api 1")
                 {
-                    Scopes = {"scope-1"}
+                    Scopes = { "scope-1" }
                 };
             }
         }
@@ -65,7 +62,7 @@ namespace OIDCServer
                     // 
                     AllowOfflineAccess = true,
                     // 
-                    AllowedScopes = 
+                    AllowedScopes =
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
