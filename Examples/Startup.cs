@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -6,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System;
 
 namespace Examples
 {
@@ -36,12 +38,19 @@ namespace Examples
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Examples", Version = "v1" });
             });
 
-            services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-                .AddJwtBearer(options =>
+
+            // 分别指定默认方案
+            /*services.AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    *//* 质询方案使用 JwtBearerDefaults.AuthenticationScheme 的话，没有认证信息就响应401。
+                     * 使用 CookieAuthenticationDefaults.AuthenticationScheme 的话没有认证信息就响应302跳转到登录页。
+                     *//*
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })*/
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                // 支持基于 Jwt Bearer 的认证方式。
+                .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
                 {
                     options.RequireHttpsMetadata = false;
                     options.SaveToken = true;
@@ -62,6 +71,12 @@ namespace Examples
                         ValidAudiences = new string[] { Audience, "无中生有" },
                         ValidateAudience = true
                     };
+                })
+                // 支持基于Cookie的认证方式。
+                .AddCookie(options =>
+                {
+                    options.Cookie.Name = "ds-user";
+                    options.Cookie.MaxAge = TimeSpan.FromMinutes(1D);
                 });
         }
 
@@ -75,6 +90,7 @@ namespace Examples
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Examples v1"));
             }
 
+            app.UseCookiePolicy();
             app.UseAuthentication();
 
             app.UseRouting();
